@@ -1,5 +1,18 @@
 # Django settings for TwitterWebApp project.
 
+#####################################################################
+# Application specific settings                                     #
+#####################################################################
+CONSUMER_KEY = ""
+CONSUMER_SECRET = ""
+REQUEST_TOKEN_URL = "https://api.twitter.com/oauth/request_token"
+AUTHORIZE_URL = "https://api.twitter.com/oauth/authorize"
+AUTHENTICATE_URL = "https://api.twitter.com/oauth/authenticate"
+ACCESS_TOKEN_URL = "https://api.twitter.com/oauth/access_token"
+DEFAULT_CALLBACK_URL = "http://iahvector.pythonanywhere.com/"
+LOCALHOST_URL = "http://localhost:8000/"
+#####################################################################
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
@@ -11,10 +24,10 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'iahvector$twitterWebAppDB',  # Or path to database file if using sqlite3.
-        'USER': 'iahvector',                  # Not used with sqlite3.
-        'PASSWORD': 'iahvector',              # Not used with sqlite3.
+        'ENGINE': 'django.db.backends.mysql',  # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'iahvector$twitterWebAppDB',   # Or path to database file if using sqlite3.
+        'USER': 'iahvector',                   # Not used with sqlite3.
+        'PASSWORD': 'iahvector',               # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }

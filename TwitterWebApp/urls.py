@@ -6,7 +6,9 @@ from django.conf.urls.defaults import patterns, include, url
 
 urlpatterns = patterns('',
     # Examples:
-    # url(r'^$', 'TwitterWebApp.views.home', name='home'),
+    url(r'^$', 'twitterApp.views.index'),
+    url(r'^(?P<screenName>\w{1,15})$', 'twitterApp.views.loginByScreenName'),
+    url(r'^(?P<screenName>\w{1,15})/$', 'twitterApp.views.loginByScreenName'),
     # url(r'^TwitterWebApp/', include('TwitterWebApp.foo.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:
