@@ -14,9 +14,12 @@ consumer = oauth.Consumer(settings.CONSUMER_KEY, settings.CONSUMER_SECRET)
 def index(request):
     print "logging in..."
     if 'step' not in request.session:
-        print "Requesting toke..."
+        print "Requesting token..."
         client = oauth.Client(consumer)
-        resp, content = client.request(settings.REQUEST_TOKEN_URL, "GET")
+        # Uncomment when on localhost.
+        resp, content = client.request(settings.REQUEST_TOKEN_URL, "POST", body=urllib.urlencode({'oauth_callback': settings.LOCALHOST_URL}))
+        # Uncomment when deployed on server.
+        # resp, content = client.request(settings.REQUEST_TOKEN_URL, "GET")
         if resp['status'] != '200':
             print resp
             print content
@@ -27,14 +30,17 @@ def index(request):
             request.session['request_token'] = dict(urlparse.parse_qsl(content, keep_blank_values=True))
             request.session['step'] = "1"
 
-        return HttpResponseRedirect(settings.AUTHENTICATE_URL + "?oauth_token=" + request.session['request_token']['oauth_token'])
+        return HttpResponseRedirect(settings.AUTHORIZE_URL + "?oauth_token=" + request.session['request_token']['oauth_token'])
 
     elif request.session['step'] == "1":
-        print "Authenticating..."
+        print "Authorizing..."
         token = oauth.Token(request.session['request_token']['oauth_token'], request.session['request_token']['oauth_token_secret'])
         client = oauth.Client(consumer, token)
 
-        resp, content = client.request(settings.ACCESS_TOKEN_URL, "GET")
+        # Uncomment when on localhost.
+        resp, content = client.request(settings.ACCESS_TOKEN_URL, "POST", body=urllib.urlencode({'oauth_callback': settings.LOCALHOST_URL}))
+        # Uncomment when deployed on server.
+        # resp, content = client.request(settings.ACCESS_TOKEN_URL, "GET")
         if resp['status'] != '200':
             print resp
             print content
@@ -49,11 +55,12 @@ def index(request):
             return HttpResponseRedirect(reverse('twitterApp.views.loginByScreenName', args=(request.session['access_token']['screen_name'],)))
 
 def loginByScreenName(request, screenName):
+
     try:
         user = User.objects.get(twitter_screen_name=screenName)
     except User.DoesNotExist:
-        user = User(twitter_id=request.session['access_token']['user_id'], twitter_screen_name=request.session['access_token']['screen_name'], access_token=request.session['access_token']['oauth_token'], access_token_secret=request.session['access_token']['oauth_token_secret'])
+        user = User(twitter_id=request.session['access_token']['user_id'], twitter_screen_name=request.session['access_token']['screen_name'], oauth_token=request.session['access_token']['oauth_token'], oauth_token_secret=request.session['access_token']['oauth_token_secret'])
         user.save()
 
     user = User.objects.get(twitter_screen_name=screenName)
-    return HttpResponse("User ID: " + str(user.twitter_id) + "</br>" + "User name: " + user.twitter_screen_name + "</br>" + "OAuth token: " + user.access_token + "</br>" + "OAuth token secret: " + user.access_token_secret)
+    return HttpResponse("User ID: " + str(user.twitter_id) + "</br>" + "User name: " + user.twitter_screen_name + "</br>" + "OAuth token: " + user.oauth_token + "</br>" + "OAuth token secret: " + user.oauth_token_secret)

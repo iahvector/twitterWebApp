@@ -3,8 +3,8 @@
 #####################################################################
 # Application specific settings                                     #
 #####################################################################
-CONSUMER_KEY = ""
-CONSUMER_SECRET = ""
+CONSUMER_KEY = "aOUfsexXF6NU4LTrEDbA"
+CONSUMER_SECRET = "Zo2v4p9IQgEZHb0GgdgA2jSWGhWmHdXf4s2yV1fCeY"
 REQUEST_TOKEN_URL = "https://api.twitter.com/oauth/request_token"
 AUTHORIZE_URL = "https://api.twitter.com/oauth/authorize"
 AUTHENTICATE_URL = "https://api.twitter.com/oauth/authenticate"
@@ -28,7 +28,8 @@ DATABASES = {
         'NAME': 'iahvector$twitterWebAppDB',   # Or path to database file if using sqlite3.
         'USER': 'iahvector',                   # Not used with sqlite3.
         'PASSWORD': 'iahvector',               # Not used with sqlite3.
-        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
+        # 'HOST': 'mysql.server',               # Uncomment when deployed on server.
+        'HOST': '',                            # Comment when on localhost.
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }
 }
@@ -129,7 +130,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'south',
-    'twitterApp'
+    'twitterApp',
     # Uncomment the next line to enable the admin:
     # 'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
