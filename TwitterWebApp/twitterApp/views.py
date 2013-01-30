@@ -2,6 +2,7 @@
 import oauth2 as oauth
 import urllib
 import urlparse
+import logging
 
 from django.http import HttpResponse
 from django.conf import settings
@@ -9,12 +10,15 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from twitterApp.models import User
 
+log = logging.getLogger(__name__)
+
 consumer = oauth.Consumer(settings.CONSUMER_KEY, settings.CONSUMER_SECRET)
 
+
 def index(request):
-    print "logging in..."
+    log.debug("Logging in...")
     if 'step' not in request.session:
-        print "Requesting token..."
+        log.debug("Requesting token...")
         client = oauth.Client(consumer)
         # Uncomment when on localhost.
         resp, content = client.request(settings.REQUEST_TOKEN_URL, "POST", body=urllib.urlencode({'oauth_callback': settings.LOCALHOST_URL}))
@@ -33,7 +37,7 @@ def index(request):
         return HttpResponseRedirect(settings.AUTHORIZE_URL + "?oauth_token=" + request.session['request_token']['oauth_token'])
 
     elif request.session['step'] == "1":
-        print "Authorizing..."
+        log.debug("Authorizing...")
         token = oauth.Token(request.session['request_token']['oauth_token'], request.session['request_token']['oauth_token_secret'])
         client = oauth.Client(consumer, token)
 
@@ -47,15 +51,16 @@ def index(request):
             del request.session['step']
             raise Exception("Invalid response from twitter!")
         else:
-            print "Switching to user profile..."
+            log.debug("Switching to user profile...")
             print resp
             print content
             del request.session['step']
             request.session['access_token'] = dict(urlparse.parse_qsl(content, keep_blank_values=True))
             return HttpResponseRedirect(reverse('twitterApp.views.loginByScreenName', args=(request.session['access_token']['screen_name'],)))
 
-def loginByScreenName(request, screenName):
 
+def loginByScreenName(request, screenName):
+    log.debug("Accessing user profile...")
     try:
         user = User.objects.get(twitter_screen_name=screenName)
     except User.DoesNotExist:
