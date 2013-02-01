@@ -8,7 +8,7 @@ from django.http import HttpResponse
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
-from twitterApp.models import User
+from TwitterWebApp.twitterApp.models import User
 
 log = logging.getLogger(__name__)
 
@@ -56,7 +56,7 @@ def index(request):
             print content
             del request.session['step']
             request.session['access_token'] = dict(urlparse.parse_qsl(content, keep_blank_values=True))
-            return HttpResponseRedirect(reverse('twitterApp.views.loginByScreenName', args=(request.session['access_token']['screen_name'],)))
+            return HttpResponseRedirect(reverse('TwitterWebApp.twitterApp.views.loginByScreenName', args=(request.session['access_token']['screen_name'],)))
 
 
 def loginByScreenName(request, screenName):
